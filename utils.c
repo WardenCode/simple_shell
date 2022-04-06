@@ -13,14 +13,19 @@
  * Return: Add a slash to the end
  */
 
-char *validate_slash (char *cmd, char *holder, char *final)
+char *validate_slash(char *cmd, char *holder, char *final)
 {
 	char *arg = NULL;
 
 	if (cmd[0] != '/')
-		arg = str_concat("/", cmd), final = str_concat(holder, arg);
+	{
+		arg = str_concat("/", cmd);
+		final = str_concat(holder, arg);
+	}
 	else
+	{
 		final = str_concat(holder, cmd);
+	}
 
 	if (arg)
 		free(arg);
@@ -64,6 +69,7 @@ char *find_char(char *str, char character)
 
 	result[j] = '\0';
 
+	free(str);
 	return (result);
 }
 
@@ -162,14 +168,16 @@ char *which(char *command)
 		else
 		{
 			holder = route + 1;
+			free(full);
 			continue;
 		}
 
 		free(full);
 	}
-	if (!route)
-		free(full);
+	/* if (!route) */
+	/* 	free(full); */
 	free(path);
+	free(command);
 
 	return (full);
 }

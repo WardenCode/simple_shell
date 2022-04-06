@@ -24,6 +24,13 @@ typedef struct path_dir_t
 
 extern char **environ;
 
+/* Shell Functions */
+
+char *find_char_rev(char *str, char character);
+char *no_new_line(char *command, char *new_command);
+char *only_the_command(char *cmd);
+void do_the_command(char *new_command);
+
 /* Utils */
 char *str_concat(char *s1, char *s2);
 void print_list(const path_dir_t *node);

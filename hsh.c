@@ -1,67 +1,49 @@
 #include "main.h"
 
-char *no_new_line(char *command, char *new_command)
-{
-	int i = 0, size = 0;
+/* int find_total_spaces(char *command) */
+/* { */
+/* 	int i = 0, counter = 0; */
 
-	size = strlen(command);
-	new_command = malloc(sizeof(char) * (size));
-	if (!new_command)
-	{
-		free(command);
-		exit(0);
-	}
-	for (i = 0; i <= size - 1; i++)
-		new_command[i] = command[i];
-	new_command[i - 1] = '\0';
-	return (new_command);
-}
+/* 	while (command[i]) */
+/* 	{ */
+/* 		if (command[i] == ' ') */
+/* 			counter++; */
+/* 		i++; */
+/* 	} */
 
-char *only_the_command(char *cmd)
-{
-	char *without_slash = NULL;
-	int i = 0;
+/* 	return (counter); */
+/* } */
 
-	for (i = strlen(cmd); cmd[i] != '/'; i--)
-		;
+/* char **get_tokens(char *command) */
+/* { */
+/* 	char **tokens = NULL; */
+/* 	char *token = NULL; */
+/* 	int spaces = find_total_spaces(command); */
 
-	without_slash = &cmd[i];
-	return (without_slash);
-}
+/* 	tokens = malloc(sizeof(char *) * (spaces + 1)); */
 
-void do_the_command(char *old_command, char *new_command)
-{
-	pid_t child_pid = 0;
-	int status_child = 0;
-	char *instruction[] = {new_command, NULL};
+/* 	token = strtok(command, " "); */
+/* 	while (command != NULL) */
+/* 	{ */
+/* 		tokens = &token; */
+/* 		token = strtok(NULL, " "); */
+/* 	} */
 
-	child_pid = fork();
+/* 	return (tokens); */
+/* } */
 
-	if (child_pid == -1)
-	{
-		perror("Error");
-		_exit(1);
-	}
-	else if (child_pid == 0)
-	{
-		if (access(new_command, F_OK) == 0)
-			execve(instruction[0], instruction, NULL);
-		free(old_command), free(new_command);
-		_exit(1);
-		/* kill(getpid(), SIGKILL); */
-	}
-	else
-	{
-		wait(&status_child);
-	}
-}
+/* void free_tokens(char **tokens) */
+/* { */
 
-int main(void)
+/* } */
+
+int main(int arg __attribute__((unused)), char **argv)
 {
 	size_t n = 0;
 	int bytes_read = 0;
 	char *command = NULL;
 	char *no_line = NULL;
+	/* char **tokend = NULL; */
 
 	while (1)
 	{
@@ -70,23 +52,32 @@ int main(void)
 		bytes_read = getline(&command, &n, stdin);
 		if (bytes_read == -1 || strcmp(command, "EOF\n") == 0)
 		{
-			free(command);
-			printf("\n");
-			_exit(1);
+			free(command), printf("\n"), _exit(1);
 		}
 		else
 		{
-			if (command[0] == '\n' || strlen(command) == 2)
+			if (command[0] == '\n')
 			{
 				free(command);
 				continue;
 			}
 			no_line = no_new_line(command, no_line);
-			if (!find_char(no_line, '/'))
+			command[strlen(command) - 1] = '\0';
+			if (access(no_line, F_OK) != 0 && strchr(no_line, '/'))
+			{
+				printf ("%s: 1: %s :not found\n", argv[0], command);
+				free(no_line), free(command);
+				continue;
+			}
+			no_line = find_char_rev(no_line, '/');
+			if (!no_line)
 				no_line = only_the_command(no_line);
 			no_line = which(no_line);
-			do_the_command(command, no_line);
-			free(no_line);
+			if (access(no_line, F_OK) == 0)
+				do_the_command(no_line), free(no_line);
+			else
+				printf ("%s: 1: %s :not found\n", argv[0], command);
+			free(command);
 		}
 	}
 	return (0);
