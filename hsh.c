@@ -48,7 +48,7 @@ int main(int arg __attribute__((unused)), char **argv)
 {
 	size_t n = 0;
 	int bytes_read = 0, errors = 1;
-	char *command = NULL, *no_line = NULL, *holder = NULL, **tokens = NULL;
+	char *command = NULL, *holder = NULL, **tokens = NULL;
 	int while_status = 1;
 
 	while (while_status)
@@ -62,7 +62,7 @@ int main(int arg __attribute__((unused)), char **argv)
 		bytes_read = getline(&command, &n, stdin);
 
 		if (bytes_read == -1)
-			free(command), free(no_line), printf("\n"),_exit(1);
+			free(command), printf("\n"),_exit(1);
 
 		if (command[0] == '\n')
 		{
@@ -71,12 +71,13 @@ int main(int arg __attribute__((unused)), char **argv)
 		}
 
 		tokens = tokenize(command); // /bin///dasdasd/asd/ls
+		free(command);
 
 		if (access(tokens[0], F_OK) != 0 && strchr(tokens[0], '/'))
 		{
 			printf ("%s: %d: %s :not found\n", argv[0], errors, tokens[0]);
 			free_tokens(tokens);
-			free(command);
+			/* free(command); */
 			errors++;
 			continue;
 		}
@@ -89,6 +90,7 @@ int main(int arg __attribute__((unused)), char **argv)
 
 		holder = which(tokens[0]);
 		tokens[0] = holder;
+		free(holder);
 
 		if (access(tokens[0], F_OK) != 0)
 			printf("%s: %d: %s :not found\n", argv[0], errors, tokens[0]), errors++;
@@ -97,7 +99,7 @@ int main(int arg __attribute__((unused)), char **argv)
 		free_tokens(tokens);
 		/* if (command != NULL) */
 		/* 	free(command); */
-		free(command);
+		/* free(command); */
 	}
 	return (0);
 }
