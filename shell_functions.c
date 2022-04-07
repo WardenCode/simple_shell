@@ -69,21 +69,30 @@ void free_tokens(char **tokens)
 {
 	int i = 0;
 
-	while (tokens[i] != NULL)
+	while (tokens[i])
+	{
+		free(tokens[i]);
+		if (!tokens[i + 1])
+		{
+			break;
+		}
 		i++;
-
-	if (i > 1)
-	{
-		free(tokens);
-		return;
-	}
-	else
-	{
-		while (i >= 0)
-			free(tokens[i]), i--;
 	}
 
-	free(tokens);
+	/* if (i > 1) */
+	/* { */
+	/* 	free(tokens); */
+	/* 	return; */
+	/* } */
+	/* else */
+	/* { */
+		/* while (i >= 0) */
+		/* 	free(tokens[i]), i--; */
+	/* } */
+	/* while (i >= 0) */
+	/* 	free(tokens[i]), i--; */
+
+	/* free(tokens); */
 }
 
 void do_the_command(char **tokens)

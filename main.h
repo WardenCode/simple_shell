@@ -36,7 +36,7 @@ void free_tokens(char **tokens);
 char *str_concat(char *s1, char *s2);
 void print_list(const path_dir_t *node);
 char *find_char(char *key, char character);
-char *validate_slash (char *cmd, char *holder, char *final);
+char *validate_slash (char *cmd, char *holder);
 char *which(char *command);
 
 /* Prototypes */

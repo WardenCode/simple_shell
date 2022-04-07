@@ -13,23 +13,23 @@
  * Return: Add a slash to the end
  */
 
-char *validate_slash(char *cmd, char *holder, char *final)
+char *validate_slash(char *cmd, char *holder)
 {
 	char *arg = NULL;
+	char *result = NULL;
 
 	if (cmd[0] != '/')
 	{
 		arg = str_concat("/", cmd);
-		final = str_concat(holder, arg);
+		result = str_concat(holder, arg);
 	}
 	else
 	{
-		final = str_concat(holder, cmd);
+		result = str_concat(holder, cmd);
 	}
-
 	if (arg)
 		free(arg);
-	return(final);
+	return (result);
 }
 
 /**
@@ -158,7 +158,7 @@ char *which(char *command)
 
 		route[0] = '\0';
 
-		full = validate_slash(command, holder, full);
+		full = validate_slash(command, holder);
 
 		if (access(full, 0) == 0)
 		{
@@ -173,7 +173,8 @@ char *which(char *command)
 		}
 	}
 	free(path);
-	/* free(command); */
+	/* if (command != NULL) */
+	/* 	free(command); */
 
 	return (full);
 }

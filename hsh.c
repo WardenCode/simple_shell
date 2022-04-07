@@ -2,7 +2,7 @@
 
 int total_malloc(char *command)
 {
-	int i = 0, counter = 2;
+	int i = 0, counter = 0;
 
 	while (command[i])
 	{
@@ -11,7 +11,7 @@ int total_malloc(char *command)
 		i++;
 	}
 
-	return (counter);
+	return (counter + 1);
 }
 
 char **tokenize(char *input)
@@ -35,10 +35,12 @@ char **tokenize(char *input)
 		/* 	tokens[i] = token; */
 		/* } */
 		tokens[i] = token;
+		/* printf("token: %s\n", tokens[i]); */
 		token = strtok(NULL, " \n\t");
 		i++;
 	}
-	tokens[i] = NULL;
+	/* tokens[i] = NULL; */
+	/* free(input); */
 	return (tokens);
 }
 
@@ -46,7 +48,7 @@ int main(int arg __attribute__((unused)), char **argv)
 {
 	size_t n = 0;
 	int bytes_read = 0, errors = 1;
-	char *command = NULL, *no_line = NULL, **tokens = NULL;
+	char *command = NULL, *no_line = NULL, *holder = NULL, **tokens = NULL;
 	int while_status = 1;
 
 	while (while_status)
@@ -68,7 +70,7 @@ int main(int arg __attribute__((unused)), char **argv)
 			continue;
 		}
 
-		tokens = tokenize(command);
+		tokens = tokenize(command); // /bin///dasdasd/asd/ls
 
 		if (access(tokens[0], F_OK) != 0 && strchr(tokens[0], '/'))
 		{
@@ -85,16 +87,17 @@ int main(int arg __attribute__((unused)), char **argv)
 		if (!tokens)
 			tokens[0] = only_the_command(tokens[0]);
 
-		tokens[0] = which(tokens[0]);
+		holder = which(tokens[0]);
+		tokens[0] = holder;
 
 		if (access(tokens[0], F_OK) != 0)
 			printf("%s: %d: %s :not found\n", argv[0], errors, tokens[0]), errors++;
 		else
 			do_the_command(tokens);
 		free_tokens(tokens);
-		if (command != NULL)
-			free(command);
-		/* free(command); */
+		/* if (command != NULL) */
+		/* 	free(command); */
+		free(command);
 	}
 	return (0);
 }
