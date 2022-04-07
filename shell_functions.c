@@ -16,7 +16,7 @@ char *find_char_rev(char *str, char character)
 	char *result = NULL;
 	ssize_t i = 0, j = 0, k = 0, counter = 0;
 
-	for (i = strlen(str); i >= 0; i--)
+	for (i = strlen(str); i >= 0; i--) // ls\0
 	{
 		if (str[i] == character)
 			break;
@@ -27,10 +27,9 @@ char *find_char_rev(char *str, char character)
 
 	result = malloc((counter) * sizeof(char));
 
+	/* result = strdup(&str[strlen(str) - counter + 1]); */
 	for (j = 0, k = strlen(str) - counter + 1; j < counter; j++)
 		result[j] = str[k + j];
-
-	/* result[j] = '\0'; */
 
 	free(str);
 	return (result);
@@ -66,11 +65,31 @@ char *only_the_command(char *cmd)
 	return (without_slash);
 }
 
-void do_the_command(char *new_command)
+void free_tokens(char **tokens)
+{
+	int i = 0;
+
+	while (tokens[i] != NULL)
+		i++;
+
+	if (i > 1)
+	{
+		free(tokens);
+		return;
+	}
+	else
+	{
+		while (i >= 0)
+			free(tokens[i]), i--;
+	}
+
+	free(tokens);
+}
+
+void do_the_command(char **tokens)
 {
 	pid_t child_pid = 0;
 	int status_child = 0;
-	char *instruction[] = {new_command, NULL};
 
 	child_pid = fork();
 
@@ -80,9 +99,12 @@ void do_the_command(char *new_command)
 	}
 	else if (child_pid == 0)
 	{
-		execve(instruction[0], instruction, environ);
+		execve(tokens[0], tokens, environ);
+		free_tokens(tokens);
 		_exit(1);
 	}
 	else
+	{
 		wait(&status_child);
+	}
 }

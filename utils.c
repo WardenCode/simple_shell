@@ -171,13 +171,9 @@ char *which(char *command)
 			free(full);
 			continue;
 		}
-
-		free(full);
 	}
-	/* if (!route) */
-	/* 	free(full); */
 	free(path);
-	free(command);
+	/* free(command); */
 
 	return (full);
 }

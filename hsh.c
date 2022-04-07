@@ -1,84 +1,100 @@
 #include "main.h"
 
-/* int find_total_spaces(char *command) */
-/* { */
-/* 	int i = 0, counter = 0; */
+int total_malloc(char *command)
+{
+	int i = 0, counter = 2;
 
-/* 	while (command[i]) */
-/* 	{ */
-/* 		if (command[i] == ' ') */
-/* 			counter++; */
-/* 		i++; */
-/* 	} */
+	while (command[i])
+	{
+		if (command[i] == ' ')
+			counter++;
+		i++;
+	}
 
-/* 	return (counter); */
-/* } */
+	return (counter);
+}
 
-/* char **get_tokens(char *command) */
-/* { */
-/* 	char **tokens = NULL; */
-/* 	char *token = NULL; */
-/* 	int spaces = find_total_spaces(command); */
+char **tokenize(char *input)
+{
+	char **tokens = NULL, *token = NULL/* , *last_token = NULL */;
+	int spaces = total_malloc(input), i = 0;
 
-/* 	tokens = malloc(sizeof(char *) * (spaces + 1)); */
+	tokens = malloc(sizeof(char *) * (spaces));
 
-/* 	token = strtok(command, " "); */
-/* 	while (command != NULL) */
-/* 	{ */
-/* 		tokens = &token; */
-/* 		token = strtok(NULL, " "); */
-/* 	} */
-
-/* 	return (tokens); */
-/* } */
-
-/* void free_tokens(char **tokens) */
-/* { */
-
-/* } */
+	token = strtok(input, " \n\t");
+	while (token != NULL)
+	{
+		/* if (i == spaces - 2) */
+		/* { */
+		/* 	last_token = no_new_line(token, last_token); */
+		/* 	tokens[i] = strdup(last_token); */
+		/* 	free(last_token); */
+		/* } */
+		/* else */
+		/* { */
+		/* 	tokens[i] = token; */
+		/* } */
+		tokens[i] = token;
+		token = strtok(NULL, " \n\t");
+		i++;
+	}
+	tokens[i] = NULL;
+	return (tokens);
+}
 
 int main(int arg __attribute__((unused)), char **argv)
 {
 	size_t n = 0;
-	int bytes_read = 0;
-	char *command = NULL;
-	char *no_line = NULL;
-	/* char **tokend = NULL; */
+	int bytes_read = 0, errors = 1;
+	char *command = NULL, *no_line = NULL, **tokens = NULL;
+	int while_status = 1;
 
-	while (1)
+	while (while_status)
 	{
+		while_status = isatty(STDIN_FILENO);
 		n = 0;
-		printf("$ ");
+
+		if (while_status == 1)
+			printf("$ ");
+
 		bytes_read = getline(&command, &n, stdin);
-		if (bytes_read == -1 || strcmp(command, "EOF\n") == 0)
+
+		if (bytes_read == -1)
+			free(command), free(no_line), printf("\n"),_exit(1);
+
+		if (command[0] == '\n')
 		{
-			free(command), printf("\n"), _exit(1);
-		}
-		else
-		{
-			if (command[0] == '\n')
-			{
-				free(command);
-				continue;
-			}
-			no_line = no_new_line(command, no_line);
-			command[strlen(command) - 1] = '\0';
-			if (access(no_line, F_OK) != 0 && strchr(no_line, '/'))
-			{
-				printf ("%s: 1: %s :not found\n", argv[0], command);
-				free(no_line), free(command);
-				continue;
-			}
-			no_line = find_char_rev(no_line, '/');
-			if (!no_line)
-				no_line = only_the_command(no_line);
-			no_line = which(no_line);
-			if (access(no_line, F_OK) == 0)
-				do_the_command(no_line), free(no_line);
-			else
-				printf ("%s: 1: %s :not found\n", argv[0], command);
 			free(command);
+			continue;
 		}
+
+		tokens = tokenize(command);
+
+		if (access(tokens[0], F_OK) != 0 && strchr(tokens[0], '/'))
+		{
+			printf ("%s: %d: %s :not found\n", argv[0], errors, tokens[0]);
+			free_tokens(tokens);
+			free(command);
+			errors++;
+			continue;
+		}
+
+		if (strchr(tokens[0], '/'))
+			tokens[0] = find_char_rev(tokens[0], '/');
+
+		if (!tokens)
+			tokens[0] = only_the_command(tokens[0]);
+
+		tokens[0] = which(tokens[0]);
+
+		if (access(tokens[0], F_OK) != 0)
+			printf("%s: %d: %s :not found\n", argv[0], errors, tokens[0]), errors++;
+		else
+			do_the_command(tokens);
+		free_tokens(tokens);
+		if (command != NULL)
+			free(command);
+		/* free(command); */
 	}
 	return (0);
 }
