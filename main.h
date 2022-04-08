@@ -22,6 +22,20 @@ typedef struct path_dir_t
 	struct path_dir_t *next;
 } path_dir_t;
 
+/**
+ * struct response - Struct to translate the tokens and holder
+ *
+ * @tokens: A char with some option
+ *
+ * @next: Pointer to the next node
+ */
+
+typedef struct response
+{
+	char **toks;
+	char *hold;
+} response;
+
 extern char **environ;
 
 /* Shell Functions */

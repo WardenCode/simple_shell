@@ -11,27 +11,29 @@
  * the str completed.
  */
 
-char *find_char_rev(char *str, char character)
+char *find_char_rev(char *str, char character) /*Here*/
 {
 	char *result = NULL;
 	ssize_t i = 0, j = 0, k = 0, counter = 0;
 
-	for (i = strlen(str); i >= 0; i--) // ls\0
+	for (i = strlen(str); i >= 0; i--)
 	{
 		if (str[i] == character)
 			break;
 		counter++;
 	}
 
-	i++;
+	/* counter++; */
 
 	result = malloc((counter) * sizeof(char));
+	if (!result)
+		return (NULL);
 
 	/* result = strdup(&str[strlen(str) - counter + 1]); */
 	for (j = 0, k = strlen(str) - counter + 1; j < counter; j++)
 		result[j] = str[k + j];
 
-	free(str);
+	/* free(str); */
 	return (result);
 }
 
@@ -44,7 +46,7 @@ char *no_new_line(char *command, char *new_command)
 	if (!new_command)
 	{
 		free(command);
-		exit(0);
+		return (NULL);
 	}
 	for (i = 0; i <= size - 1; i++)
 		new_command[i] = command[i];
@@ -65,34 +67,10 @@ char *only_the_command(char *cmd)
 	return (without_slash);
 }
 
-void free_tokens(char **tokens)
+void free_tokens(char **tokens)/*Here*/
 {
-	int i = 0;
-
-	while (tokens[i])
-	{
-		free(tokens[i]);
-		if (!tokens[i + 1])
-		{
-			break;
-		}
-		i++;
-	}
-
-	/* if (i > 1) */
-	/* { */
-	/* 	free(tokens); */
-	/* 	return; */
-	/* } */
-	/* else */
-	/* { */
-		/* while (i >= 0) */
-		/* 	free(tokens[i]), i--; */
-	/* } */
-	/* while (i >= 0) */
-	/* 	free(tokens[i]), i--; */
-
-	/* free(tokens); */
+	free(tokens[0]);
+	free(tokens);
 }
 
 void do_the_command(char **tokens)

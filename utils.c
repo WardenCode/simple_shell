@@ -22,13 +22,12 @@ char *validate_slash(char *cmd, char *holder)
 	{
 		arg = str_concat("/", cmd);
 		result = str_concat(holder, arg);
+		free(arg);
 	}
 	else
 	{
 		result = str_concat(holder, cmd);
 	}
-	if (arg)
-		free(arg);
 	return (result);
 }
 
@@ -63,6 +62,8 @@ char *find_char(char *str, char character)
 		return(NULL);
 
 	result = malloc((i + 1) * sizeof(char));
+	if (!result)
+		return (NULL);
 
 	for (j = 0; j < i; j++)
 		result[j] = str[j];
@@ -117,7 +118,6 @@ char *str_concat(char *s1, char *s2)
 
 	total_size = size1 + size2 + 1;
 	final_str = malloc(total_size * sizeof(char));
-
 	if (!final_str)
 		return (NULL);
 
@@ -163,7 +163,8 @@ char *which(char *command)
 		if (access(full, 0) == 0)
 		{
 			printf("%s\n", full);
-			break;
+			free(path);
+			return (full);
 		}
 		else
 		{
@@ -172,9 +173,7 @@ char *which(char *command)
 			continue;
 		}
 	}
-	free(path);
-	/* if (command != NULL) */
-	/* 	free(command); */
 
-	return (full);
+	free(path);
+	return (command);
 }
