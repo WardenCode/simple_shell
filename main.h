@@ -25,9 +25,9 @@ typedef struct path_dir_t
 /**
  * struct response - Struct to translate the tokens and holder
  *
- * @tokens: A char with some option
+ * @toks: Double pointer to the tokens.
  *
- * @next: Pointer to the next node
+ * @hold: Pointer to a token to free later.
  */
 
 typedef struct response
@@ -39,18 +39,22 @@ typedef struct response
 extern char **environ;
 
 /* Shell Functions */
-
 char *find_char_rev(char *str, char character);
 char *no_new_line(char *command, char *new_command);
 char *only_the_command(char *cmd);
 void do_the_command(char **tokens);
 void free_tokens(char **tokens);
 
+/* Shell Functions */
+int all_spaces(char *command, ssize_t size);
+int total_malloc(char *command);
+struct response *tokenize(char *input);
+
 /* Utils */
 char *str_concat(char *s1, char *s2);
 void print_list(const path_dir_t *node);
 char *find_char(char *key, char character);
-char *validate_slash (char *cmd, char *holder);
+char *validate_slash(char *cmd, char *holder);
 char *which(char *command);
 
 /* Prototypes */

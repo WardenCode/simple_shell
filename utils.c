@@ -8,15 +8,12 @@
  *
  * @holder: Contains a copy of the path.
  *
- * @final: Pointer to the save the final.
- *
  * Return: Add a slash to the end
  */
 
 char *validate_slash(char *cmd, char *holder)
 {
-	char *arg = NULL;
-	char *result = NULL;
+	char *arg = NULL, *result = NULL;
 
 	if (cmd[0] != '/')
 	{
@@ -38,8 +35,8 @@ char *validate_slash(char *cmd, char *holder)
  *
  * @character: char to search in the str.
  *
- * Return: A pointer to the string before the char, if not find that char return
- * the str completed.
+ * Return: A pointer to the string before the char
+ * if not find that char return the str completed.
  */
 
 char *find_char(char *str, char character)
@@ -59,7 +56,7 @@ char *find_char(char *str, char character)
 	}
 
 	if (flag == 1 && str[i] != '\0')
-		return(NULL);
+		return (NULL);
 
 	result = malloc((i + 1) * sizeof(char));
 	if (!result)
@@ -150,14 +147,13 @@ char *which(char *command)
 	path = str_concat(getenv("PATH"), ":");
 	holder = path;
 
-        while (route != NULL)
+	while (route != NULL)
 	{
 		route = strchr(holder, ':');
 		if (!route)
 			break;
 
 		route[0] = '\0';
-
 		full = validate_slash(command, holder);
 
 		if (access(full, 0) == 0)

@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
- * find_char - Search a char inside of a str beginning with the end
+ * find_char_rev - Search a char inside of a str beginning with the end.
  *
  * @str: String to search a char.
  *
@@ -11,7 +11,7 @@
  * the str completed.
  */
 
-char *find_char_rev(char *str, char character) /*Here*/
+char *find_char_rev(char *str, char character)
 {
 	char *result = NULL;
 	ssize_t i = 0, j = 0, k = 0, counter = 0;
@@ -23,19 +23,26 @@ char *find_char_rev(char *str, char character) /*Here*/
 		counter++;
 	}
 
-	/* counter++; */
-
 	result = malloc((counter) * sizeof(char));
 	if (!result)
 		return (NULL);
 
-	/* result = strdup(&str[strlen(str) - counter + 1]); */
 	for (j = 0, k = strlen(str) - counter + 1; j < counter; j++)
 		result[j] = str[k + j];
 
-	/* free(str); */
+	free(str);
 	return (result);
 }
+
+/**
+ * no_new_line - Copy a pointer of the function getline and delete the '\n'.
+ *
+ * @command: Source command.
+ *
+ * @new_command: Pointer to the new command (without '\n').
+ *
+ * Return: Pointer to the command without new line.
+ */
 
 char *no_new_line(char *command, char *new_command)
 {
@@ -54,6 +61,14 @@ char *no_new_line(char *command, char *new_command)
 	return (new_command);
 }
 
+/**
+ * only_the_command - Take the command (with route) and oly takes the command.
+ *
+ * @cmd: Route of the command.
+ *
+ * Return: Pointer to the name of the command.
+ */
+
 char *only_the_command(char *cmd)
 {
 	char *without_slash = NULL;
@@ -67,11 +82,27 @@ char *only_the_command(char *cmd)
 	return (without_slash);
 }
 
-void free_tokens(char **tokens)/*Here*/
+/**
+ * free_tokens - Free a double pointer that contains tokens of a command.
+ *
+ * @tokens: Double pointer with the information of the command.
+ *
+ * Return: Void
+ */
+
+void free_tokens(char **tokens)
 {
 	free(tokens[0]);
 	free(tokens);
 }
+
+/**
+ * do_the_command - Takes the tokens and execute shell commands.
+ *
+ * @tokens: Double pointer with the information of the command.
+ *
+ * Return: Void
+ */
 
 void do_the_command(char **tokens)
 {
