@@ -15,7 +15,8 @@ int all_spaces(char *command, ssize_t size)
 {
 	ssize_t i = 0, flag = 1;
 
-	while (command[i] == ' ' || command[i] == '\n' || command[i] == '\t')
+	while (command[i] == ' ' || command[i] == '\n' || command[i] == '\t'
+	       || command[i] == '/')
 		i++;
 
 	if (i != size)

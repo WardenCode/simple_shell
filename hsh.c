@@ -39,12 +39,54 @@ void validate_last_access(char **tokens, char *file, int *errors, int *flag)
 	{
 		printf("%s: %d: %s :not found\n", file, *errors, tokens[0]);
 		errors++;
-		*flag = ((flag == 0) ? -1 : 2);
+		*flag = ((*flag == 0) ? -1 : 2);
 	}
 	else
 	{
 		do_the_command(tokens);
 	}
+}
+
+/**
+ * main - Main function to run the simple shell.
+ *
+ * @argc: Arguments counter.
+ *
+ * @argv: Arguments vector.
+ *
+ * Return: 0.
+ */
+
+int route_works(response *obj, int *while_status)
+{
+	if (access(obj->toks[0], F_OK) == 0)
+	{
+		do_the_command(obj->toks);
+		free_tokens(obj->toks);
+		free(obj);
+		*while_status = 1;
+		return (1);
+	}
+	return (0);
+}
+
+/**
+ * main - Main function to run the simple shell.
+ *
+ * @argc: Arguments counter.
+ *
+ * @argv: Arguments vector.
+ *
+ * Return: 0.
+ */
+
+void free_all(int *flag, response *obj, char *hold, int *while_status)
+{
+	(*flag == 0 || *flag == 2) ? free(obj->hold) : free(hold);
+
+	free_tokens(obj->toks);
+	free(obj);
+	*while_status = 1;
 }
 
 /**
@@ -79,14 +121,8 @@ int main(int argc __attribute__((unused)), char **argv)
 
 		req = tokenize(command);
 
-		if (access(req->toks[0], F_OK) == 0)
-		{
-			do_the_command(req->toks);
-			free_tokens(req->toks);
-			free(req);
-			while_status = 1;
+		if (route_works(req, &while_status))
 			continue;
-		}
 
 		if (access(req->toks[0], F_OK) != 0 && strchr(req->toks[0], '/'))
 		{
@@ -96,28 +132,18 @@ int main(int argc __attribute__((unused)), char **argv)
 		}
 
 		if (strchr(req->toks[0], '/'))
-		{
-			hold = find_char_rev(req->toks[0], '/');
-			req->toks[0] = hold;
-			flag = 1;
-		}
+			hold = find_char_rev(req->toks[0], '/'), req->toks[0] = hold, flag = 1;
 
 		req->toks[0] = which(req->toks[0]);
 
-		/* if (access(req->toks[0], F_OK) != 0) */
-		/* { */
-		/* 	printf("%s: %d: %s :not found\n", argv[0], errors, req->toks[0]), errors++; */
-		/* 	flag = ((flag == 0) ? -1 : 2); */
-		/* } */
-		/* else */
-		/* { */
-		/* 	do_the_command(req->toks); */
-		/* } */
-
 		validate_last_access(req->toks, argv[0], &errors, &flag);
 
-		(flag == 0 || flag == 2) ? free(req->hold) : free(hold);
-		free_tokens(req->toks), free(req), while_status = 1;
+		free_all(&flag, req, hold, &while_status);
+		/* (flag == 0 || flag == 2) ? free(req->hold) : free(hold); */
+
+		/* free_tokens(req->toks); */
+		/* free(req); */
+		/* while_status = 1; */
 	}
 	return (0);
 }
