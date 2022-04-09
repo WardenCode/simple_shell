@@ -99,6 +99,27 @@ void free_all(int *flag, response *obj, char *hold, int *while_status)
  * Return: 0.
  */
 
+int fail_route(response *req, char *argv, int *err)
+{
+	if (access(req->toks[0], F_OK) != 0 && strchr(req->toks[0], '/'))
+	{
+		printf("%s: %d: %s :not found\n", argv, *err, req->toks[0]);
+		free_tokens(req->toks), free(req), *err += 1;
+		return (1);
+	}
+	return (0);
+}
+
+/**
+ * main - Main function to run the simple shell.
+ *
+ * @argc: Arguments counter.
+ *
+ * @argv: Arguments vector.
+ *
+ * Return: 0.
+ */
+
 int main(int argc __attribute__((unused)), char **argv)
 {
 	size_t n = 0;
@@ -124,12 +145,15 @@ int main(int argc __attribute__((unused)), char **argv)
 		if (route_works(req, &while_status))
 			continue;
 
-		if (access(req->toks[0], F_OK) != 0 && strchr(req->toks[0], '/'))
-		{
-			printf("%s: %d: %s :not found\n", argv[0], errors, req->toks[0]);
-			free_tokens(req->toks), free(req), errors++;
+		if (fail_route(req, argv[0], &errors))
 			continue;
-		}
+
+		/* if (access(req->toks[0], F_OK) != 0 && strchr(req->toks[0], '/')) */
+		/* { */
+		/* 	printf("%s: %d: %s :not found\n", argv[0], errors, req->toks[0]); */
+		/* 	free_tokens(req->toks), free(req), errors++; */
+		/* 	continue; */
+		/* } */
 
 		if (strchr(req->toks[0], '/'))
 			hold = find_char_rev(req->toks[0], '/'), req->toks[0] = hold, flag = 1;
@@ -139,11 +163,6 @@ int main(int argc __attribute__((unused)), char **argv)
 		validate_last_access(req->toks, argv[0], &errors, &flag);
 
 		free_all(&flag, req, hold, &while_status);
-		/* (flag == 0 || flag == 2) ? free(req->hold) : free(hold); */
-
-		/* free_tokens(req->toks); */
-		/* free(req); */
-		/* while_status = 1; */
 	}
 	return (0);
 }
