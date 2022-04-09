@@ -131,37 +131,23 @@ int main(int argc __attribute__((unused)), char **argv)
 	{
 		while_status = isatty(STDIN_FILENO);
 		n = 0, flag = 0;
-
 		if (while_status == 1)
 			printf("$ ");
-
 		bytes_read = getline(&command, &n, stdin);
-
 		if (first_validations(command, bytes_read))
 			continue;
-
 		req = tokenize(command);
+
+
 
 		if (route_works(req, &while_status))
 			continue;
-
 		if (fail_route(req, argv[0], &errors))
 			continue;
-
-		/* if (access(req->toks[0], F_OK) != 0 && strchr(req->toks[0], '/')) */
-		/* { */
-		/* 	printf("%s: %d: %s :not found\n", argv[0], errors, req->toks[0]); */
-		/* 	free_tokens(req->toks), free(req), errors++; */
-		/* 	continue; */
-		/* } */
-
 		if (strchr(req->toks[0], '/'))
 			hold = find_char_rev(req->toks[0], '/'), req->toks[0] = hold, flag = 1;
-
 		req->toks[0] = which(req->toks[0]);
-
 		validate_last_access(req->toks, argv[0], &errors, &flag);
-
 		free_all(&flag, req, hold, &while_status);
 	}
 	return (0);
