@@ -36,19 +36,41 @@ typedef struct response
 	char *hold;
 } response;
 
+/**
+ * struct built - Struct to translate the tokens and holder
+ *
+ * @key: Pointer to a key (name of the built).
+ *
+ * @hold: Pointer to a function of the built.
+ */
+
+typedef struct built
+{
+	char *key;
+	int (*func)(response *res);
+} built;
+
 extern char **environ;
 
 /* Shell Functions */
 char *find_char_rev(char *str, char character);
 char *no_new_line(char *command, char *new_command);
 char *only_the_command(char *cmd);
-void do_the_command(char **tokens);
+void do_the_command(response *res);
 void free_tokens(char **tokens);
 
-/* Shell Functions */
+/* Shell Functions 2*/
 int all_spaces(char *command, ssize_t size);
 int total_malloc(char *command);
 struct response *tokenize(char *input);
+int first_validations(char *command, int bytes_read);
+void validate_last_access(response *res, char *file, int *errors, int *flag);
+
+/* Shell Functions 3*/
+int route_works(response *obj, int *while_status);
+void free_all(int *flag, response *obj, char *hold, int *while_status);
+int fail_route(response *req, char *argv, int *err);
+char *clean_spaces(char *command);
 
 /* Utils */
 char *str_concat(char *s1, char *s2);

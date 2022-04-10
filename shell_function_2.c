@@ -36,11 +36,14 @@ int all_spaces(char *command, ssize_t size)
 
 int total_malloc(char *command)
 {
-	int i = 0, counter = 0;
+	int i = 0, counter = 0, flag = 0;
 
 	while (command[i] != '\0')
 	{
-		if (command[i] == ' ' || command[i] == '\t')
+		if (command[i] != ' ' && command[i] != '\t')
+			flag = 1;
+
+		if ((command[i] == ' ' || command[i] == '\t') && flag == 1)
 			counter++;
 		i++;
 	}
@@ -55,7 +58,7 @@ int total_malloc(char *command)
  * Return: A structure with the tokens and a holder to free later.
  */
 
-struct response *tokenize(char *input)
+response *tokenize(char *input)
 {
 	char **tokens = NULL, *token = NULL, *holder = NULL;
 	int spaces = total_malloc(input), i = 0;
@@ -82,4 +85,55 @@ struct response *tokenize(char *input)
 	res->toks = tokens;
 	res->hold = holder;
 	return (res);
+}
+
+/**
+ * first_validations - Validations after the getline (all spaces or errors).
+ *
+ * @command: Command (input) of the getline.
+ *
+ * @bytes_read: Lenght of the command.
+ *
+ * Return: 0 if all good, 1 otherwise.
+ */
+
+int first_validations(char *command, int bytes_read)
+{
+	if (bytes_read == -1)
+		free(command), printf("\n"), _exit(1);
+
+	if (all_spaces(command, bytes_read))
+	{
+		free(command);
+		return (1);
+	}
+	return (0);
+}
+
+/**
+ * validate_last_access - Validate if the token[0] is a correct route or not
+ *
+ * @res: Pointer to an structure (tokens and holder).
+ *
+ * @file: Pointer to the name of the executable.
+ *
+ * @errors: Pointer to the counter of errors ocurred on the shell.
+ *
+ * @flag: Pointer to flag to decide what free.
+ *
+ * Return: 0.
+ */
+
+void validate_last_access(response *res, char *file, int *errors, int *flag)
+{
+	if (access(res->hold, F_OK) != 0)
+	{
+		printf("%s: %d: %s :not found\n", file, *errors, res->hold);
+		*errors += 1;
+		*flag = ((*flag == 0) ? -1 : 2);
+	}
+	else
+	{
+		do_the_command(res);
+	}
 }

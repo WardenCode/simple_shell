@@ -99,12 +99,12 @@ void free_tokens(char **tokens)
 /**
  * do_the_command - Takes the tokens and execute shell commands.
  *
- * @tokens: Double pointer with the information of the command.
+ * @res: Pointer to a structur (tokens and holder).
  *
  * Return: Void
  */
 
-void do_the_command(char **tokens)
+void do_the_command(response *res)
 {
 	pid_t child_pid = 0;
 	int status_child = 0;
@@ -117,8 +117,10 @@ void do_the_command(char **tokens)
 	}
 	else if (child_pid == 0)
 	{
-		execve(tokens[0], tokens, environ);
-		free_tokens(tokens);
+		execve(res->hold, res->toks, environ);
+		free_tokens(res->toks);
+		free(res->hold);
+		free(res);
 		_exit(1);
 	}
 	else

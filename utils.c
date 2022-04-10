@@ -140,12 +140,14 @@ char *str_concat(char *s1, char *s2)
 char *which(char *command)
 {
 	char *path = NULL, *route = "\0", *full = NULL, *holder = NULL;
+	char *command_holder = NULL;
 
 	if (!command)
 		return (NULL);
-
 	path = str_concat(getenv("PATH"), ":");
 	holder = path;
+
+	command_holder = clean_spaces(command);
 
 	while (route != NULL)
 	{
@@ -154,11 +156,12 @@ char *which(char *command)
 			break;
 
 		route[0] = '\0';
-		full = validate_slash(command, holder);
+		/* full = validate_slash(command, holder); */
+		full = validate_slash(command_holder, holder);
 
 		if (access(full, 0) == 0)
 		{
-			printf("%s\n", full);
+			/* printf("%s\n", full); */
 			free(path);
 			return (full);
 		}
@@ -169,7 +172,6 @@ char *which(char *command)
 			continue;
 		}
 	}
-
 	free(path);
 	return (command);
 }

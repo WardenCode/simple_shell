@@ -1,114 +1,38 @@
 #include "main.h"
 
 /**
- * first_validation - 
+ * match_built_in - Find if the built in to use.
  *
- * @argc: Arguments counter.
+ * @res: Pointer to the structure (tokens, holder).
  *
- * @argv: Arguments vector.
- *
- * Return: 0.
+ * Return: Return 1 if use a function, 0 otherwise.
  */
 
-int first_validations(char *command, int bytes_read)
-{
-	if (bytes_read == -1)
-		free(command), printf("\n"), _exit(1);
+/* int match_built_in(response *res) */
+/* { */
+/* 	int i = 0; */
+/* 	built options[] = { */
+/* 		{"env", built_env}, */
+/* 		{"exit", built_exit}, */
+/* 		{"unsetenv", built_unsetenv}, */
+/* 		{"cd", built_cd}, */
+/* 		{"help", built_help}, */
+/* 		{"setenv", built_setenv}, */
+/* 		{"alias", built_alias}, */
+/* 		{NULL, NULL} */
+/* 	}; */
 
-	if (all_spaces(command, bytes_read))
-	{
-		free(command);
-		return (1);
-	}
-	return (0);
-}
-
-/**
- * main - Main function to run the simple shell.
- *
- * @argc: Arguments counter.
- *
- * @argv: Arguments vector.
- *
- * Return: 0.
- */
-
-void validate_last_access(char **tokens, char *file, int *errors, int *flag)
-{
-	if (access(tokens[0], F_OK) != 0)
-	{
-		printf("%s: %d: %s :not found\n", file, *errors, tokens[0]);
-		errors++;
-		*flag = ((*flag == 0) ? -1 : 2);
-	}
-	else
-	{
-		do_the_command(tokens);
-	}
-}
-
-/**
- * main - Main function to run the simple shell.
- *
- * @argc: Arguments counter.
- *
- * @argv: Arguments vector.
- *
- * Return: 0.
- */
-
-int route_works(response *obj, int *while_status)
-{
-	if (access(obj->toks[0], F_OK) == 0)
-	{
-		do_the_command(obj->toks);
-		free_tokens(obj->toks);
-		free(obj);
-		*while_status = 1;
-		return (1);
-	}
-	return (0);
-}
-
-/**
- * main - Main function to run the simple shell.
- *
- * @argc: Arguments counter.
- *
- * @argv: Arguments vector.
- *
- * Return: 0.
- */
-
-void free_all(int *flag, response *obj, char *hold, int *while_status)
-{
-	(*flag == 0 || *flag == 2) ? free(obj->hold) : free(hold);
-
-	free_tokens(obj->toks);
-	free(obj);
-	*while_status = 1;
-}
-
-/**
- * main - Main function to run the simple shell.
- *
- * @argc: Arguments counter.
- *
- * @argv: Arguments vector.
- *
- * Return: 0.
- */
-
-int fail_route(response *req, char *argv, int *err)
-{
-	if (access(req->toks[0], F_OK) != 0 && strchr(req->toks[0], '/'))
-	{
-		printf("%s: %d: %s :not found\n", argv, *err, req->toks[0]);
-		free_tokens(req->toks), free(req), *err += 1;
-		return (1);
-	}
-	return (0);
-}
+/* 	while (options[i].key != NULL) */
+/* 	{ */
+/* 		if (strcmp(res->toks[0], options[i].key) == 0) */
+/* 		{ */
+/* 			options[i].func(res); */
+/* 			return (1); */
+/* 		} */
+/* 		i++; */
+/* 	} */
+/* 	return (0); */
+/* } */
 
 /**
  * main - Main function to run the simple shell.
@@ -138,16 +62,16 @@ int main(int argc __attribute__((unused)), char **argv)
 			continue;
 		req = tokenize(command);
 
-
+		/* match_built_in(); */
 
 		if (route_works(req, &while_status))
 			continue;
 		if (fail_route(req, argv[0], &errors))
 			continue;
-		if (strchr(req->toks[0], '/'))
-			hold = find_char_rev(req->toks[0], '/'), req->toks[0] = hold, flag = 1;
-		req->toks[0] = which(req->toks[0]);
-		validate_last_access(req->toks, argv[0], &errors, &flag);
+		/* if (strchr(req->toks[0], '/')) */
+		/* 	hold = find_char_rev(req->toks[0], '/'), req->toks[0] = hold, flag = 1; */
+		req->hold = which(req->hold);
+		validate_last_access(req, argv[0], &errors, &flag);
 		free_all(&flag, req, hold, &while_status);
 	}
 	return (0);
