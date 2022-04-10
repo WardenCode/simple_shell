@@ -77,7 +77,7 @@ response *tokenize(char *input)
 	free(input);
 	while (token != NULL)
 	{
-		tokens[i] = token;
+		tokens[i] = strdup(token);
 		token = strtok(NULL, " \n\t");
 		i++;
 	}
@@ -124,13 +124,12 @@ int first_validations(char *command, int bytes_read)
  * Return: 0.
  */
 
-void validate_last_access(response *res, char *file, int *errors, int *flag)
+void validate_last_access(response *res, char *file, int *errors)
 {
 	if (access(res->hold, F_OK) != 0)
 	{
-		printf("%s: %d: %s :not found\n", file, *errors, res->hold);
+		printf("%s: %d: %s :not found\n", file, *errors, clean_spaces(res->hold));
 		*errors += 1;
-		*flag = ((*flag == 0) ? -1 : 2);
 	}
 	else
 	{

@@ -90,9 +90,15 @@ char *only_the_command(char *cmd)
  * Return: Void
  */
 
-void free_tokens(char **tokens)
+void free_tokens(char **tokens)// ls\n\0
 {
-	free(tokens[0]);
+	int i = 0;
+
+	while (tokens[i])
+	{
+		free(tokens[i]);
+		i++;
+	}
 	free(tokens);
 }
 
@@ -117,7 +123,7 @@ void do_the_command(response *res)
 	}
 	else if (child_pid == 0)
 	{
-		execve(res->hold, res->toks, environ);
+		execve(clean_spaces(res->hold), res->toks, environ);
 		free_tokens(res->toks);
 		free(res->hold);
 		free(res);

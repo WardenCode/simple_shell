@@ -15,8 +15,7 @@ int route_works(response *obj, int *while_status)
 	if (access(obj->toks[0], F_OK) == 0)
 	{
 		do_the_command(obj);
-		free_tokens(obj->toks);
-		free(obj);
+		free_all(obj, while_status);
 		*while_status = 1;
 		return (1);
 	}
@@ -37,11 +36,10 @@ int route_works(response *obj, int *while_status)
  * Return: Void.
  */
 
-void free_all(int *flag, response *obj, char *hold, int *while_status)
+void free_all(response *obj, int *while_status)
 {
-	(*flag == 0 || *flag == 2) ? free(obj->hold) : free(hold);
-
 	free_tokens(obj->toks);
+	free(obj->hold);
 	free(obj);
 	*while_status = 1;
 }
@@ -49,7 +47,7 @@ void free_all(int *flag, response *obj, char *hold, int *while_status)
 /**
  * fail_route - Validates if a route fails.
  *
- * @req: Pointer to a .
+ * @req: Pointer to a structure.
  *
  * @argv: Arguments vector.
  *
@@ -62,30 +60,33 @@ int fail_route(response *req, char *argv, int *err)
 {
 	if (access(req->toks[0], F_OK) != 0 && strchr(req->toks[0], '/'))
 	{
-		printf("%s: %d: %s :not found\n", argv, *err, req->toks[0]);
-		free_tokens(req->toks), free(req), *err += 1;
+		printf("%s: %d: %s :not found\n", argv, *err, clean_spaces(req->toks[0]));
+		free_tokens(req->toks);
+		free(req->hold);
+		free(req);
+		*err += 1;
 		return (1);
 	}
 	return (0);
 }
 
-/* /\** */
-/*  * clean_spaces - Find the spaces and clean it. */
-/*  * */
-/*  * @command: Command to search. */
-/*  * */
-/*  * Return: The path if success, NULL if failure. */
-/*  *\/ */
+/**
+ * clean_spaces - Find the spaces and clean it.
+ *
+ * @command: Command to search.
+ *
+ * Return: The path if success, NULL if failure.
+ */
 
-/* char *clean_spaces(char *command) */
-/* { */
-/* 	int i = 0; */
+char *clean_spaces(char *command)
+{
+	int i = 0;
 
-/* 	while (command[i] != '\0') */
-/* 	{ */
-/* 		if (command[i] != ' ') */
-/* 			return (&command[i]); */
-/* 		i++; */
-/* 	} */
-/* 	return (NULL); */
-/* } */
+	while (command[i] != '\0')
+	{
+		if (command[i] != ' ' && command[i] != '\t')
+			return (&command[i]);
+		i++;
+	}
+	return (NULL);
+}

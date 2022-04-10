@@ -163,6 +163,7 @@ char *which(char *command)
 		{
 			/* printf("%s\n", full); */
 			free(path);
+			free(command);
 			return (full);
 		}
 		else

@@ -62,13 +62,13 @@ void free_tokens(char **tokens);
 /* Shell Functions 2*/
 int all_spaces(char *command, ssize_t size);
 int total_malloc(char *command);
-struct response *tokenize(char *input);
+response *tokenize(char *input);
 int first_validations(char *command, int bytes_read);
-void validate_last_access(response *res, char *file, int *errors, int *flag);
+void validate_last_access(response *res, char *file, int *errors);
 
 /* Shell Functions 3*/
 int route_works(response *obj, int *while_status);
-void free_all(int *flag, response *obj, char *hold, int *while_status);
+void free_all(response *obj, int *while_status);
 int fail_route(response *req, char *argv, int *err);
 char *clean_spaces(char *command);
 
@@ -78,6 +78,18 @@ void print_list(const path_dir_t *node);
 char *find_char(char *key, char character);
 char *validate_slash(char *cmd, char *holder);
 char *which(char *command);
+
+/*Built in Functions*/
+int built_env(response *res __attribute__ ((unused)));
+int built_exit(response *res);
+int built_cd(response *res __attribute__ ((unused)));
+int built_help(response *res __attribute__ ((unused)));
+int built_alias(response *res __attribute__ ((unused)));
+int built_setenv(response *res __attribute__ ((unused)));
+int built_unsetenv(response *res __attribute__ ((unused)));
+
+/*Built in Utils*/
+char *find_points(char *key);
 
 /* Prototypes */
 void display_path(void);
