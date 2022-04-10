@@ -25,11 +25,7 @@ int route_works(response *obj, int *while_status)
 /**
  * free_all - Function that free all the malloc of the program.
  *
- * @flag: Pointer to a flag.
- *
  * @obj: Pointer to a structure (tokens and holder)
- *
- * @hold: Pointer to a holder.
  *
  * @while_status: Status of the infinite while..
  *

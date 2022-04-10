@@ -90,7 +90,7 @@ char *only_the_command(char *cmd)
  * Return: Void
  */
 
-void free_tokens(char **tokens)// ls\n\0
+void free_tokens(char **tokens)
 {
 	int i = 0;
 

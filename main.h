@@ -5,8 +5,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+/* MACROS */
+
+#define UNUSED(x) (void)(x)
 
 /**
  * struct path_dir_t - Struct to use it in path linked list
@@ -41,13 +45,13 @@ typedef struct response
  *
  * @key: Pointer to a key (name of the built).
  *
- * @hold: Pointer to a function of the built.
+ * @func: Pointer to a function of the built.
  */
 
 typedef struct built
 {
 	char *key;
-	int (*func)(response *res);
+	int (*func)(response *res, int *errors, char *argv);
 } built;
 
 extern char **environ;
@@ -80,16 +84,18 @@ char *validate_slash(char *cmd, char *holder);
 char *which(char *command);
 
 /*Built in Functions*/
-int built_env(response *res __attribute__ ((unused)));
-int built_exit(response *res);
-int built_cd(response *res __attribute__ ((unused)));
-int built_help(response *res __attribute__ ((unused)));
-int built_alias(response *res __attribute__ ((unused)));
-int built_setenv(response *res __attribute__ ((unused)));
-int built_unsetenv(response *res __attribute__ ((unused)));
+int built_env(response *res, int *errors, char *argv);
+int built_exit(response *res, int *errors, char *argv);
+int built_cd(response *res, int *errors, char *argv);
+int built_help(response *res, int *errors, char *argv);
+int built_alias(response *res, int *errors, char *argv);
+int built_setenv(response *res, int *errors, char *argv);
+int built_unsetenv(response *res, int *errors, char *argv);
 
 /*Built in Utils*/
 char *find_points(char *key);
+int number_of_tokens(char **tokens);
+int is_number(char *str);
 
 /* Prototypes */
 void display_path(void);

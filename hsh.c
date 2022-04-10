@@ -8,7 +8,7 @@
  * Return: Return 1 if use a function, 0 otherwise.
  */
 
-int match_built_in(response *res)
+int match_built_in(response *res, int *errors, char *argv)
 {
 	int i = 0;
 	built options[] = {
@@ -26,12 +26,31 @@ int match_built_in(response *res)
 	{
 		if (strcmp(res->toks[0], options[i].key) == 0)
 		{
-			options[i].func(res);
+			options[i].func(res, errors, argv);
 			return (1);
 		}
 		i++;
 	}
 	return (0);
+}
+
+void c_handler(int x)
+{
+	UNUSED(x);
+	write(1,"\n$ ", 3);
+}
+
+int validate_file(int argc, char *file)
+{
+	int exists = 0;
+
+	if (file == NULL)
+		return (exists);
+
+	if (argc == 2)
+		access(file, F_OK) == 0 ? exists = 1 : printf("error to see the file");
+
+	return (exists);
 }
 
 /**
@@ -51,17 +70,21 @@ int main(int argc __attribute__((unused)), char **argv)
 	char *command = NULL;
 	response *req = NULL;
 
+	signal(SIGINT, c_handler);
+
 	while (while_status)
 	{
 		while_status = isatty(STDIN_FILENO), n = 0;
 		if (while_status == 1)
-			printf("$ ");
+			write(1, "$ ", 2);
+
 		bytes_read = getline(&command, &n, stdin);
+
 		if (first_validations(command, bytes_read))
 			continue;
 		req = tokenize(command);
 
-		if(match_built_in(req))
+		if (match_built_in(req, &errors, argv[0]))
 		{
 			free_all(req, &while_status);
 			continue;

@@ -156,12 +156,11 @@ char *which(char *command)
 			break;
 
 		route[0] = '\0';
-		/* full = validate_slash(command, holder); */
+
 		full = validate_slash(command_holder, holder);
 
 		if (access(full, 0) == 0)
 		{
-			/* printf("%s\n", full); */
 			free(path);
 			free(command);
 			return (full);

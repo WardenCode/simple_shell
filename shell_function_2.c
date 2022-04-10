@@ -119,8 +119,6 @@ int first_validations(char *command, int bytes_read)
  *
  * @errors: Pointer to the counter of errors ocurred on the shell.
  *
- * @flag: Pointer to flag to decide what free.
- *
  * Return: 0.
  */
 
