@@ -101,7 +101,7 @@ int built_exit(response *r, int *err, char *av)
 	}
 	else
 	{
-		fprintf(stderr, "%s: %d: exit: Illegal \number: %s\n", av, *err, r->toks[1]);
+		fprintf(stderr, "%s: %d: exit: Illegal number: %s\n", av, *err, r->toks[1]);
 		*err += 1;
 		return (1);
 	}
