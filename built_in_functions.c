@@ -92,7 +92,7 @@ int built_exit(response *r, int *err, char *av)
 		free_tokens(r->toks);
 		free(r->hold);
 		free(r);
-		exit(2);
+		exit(0);
 	}
 
 	if (is_number(r->toks[1]))
