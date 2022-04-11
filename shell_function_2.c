@@ -50,7 +50,10 @@ response *tokenize(char *input)
 int first_validations(char *command, int bytes_read)
 {
 	if (bytes_read == -1)
-		free(command), printf("\n"), _exit(1);
+	{
+		free(command);
+		return (2);
+	}
 
 	if (all_spaces(command, bytes_read))
 	{
@@ -72,16 +75,16 @@ int first_validations(char *command, int bytes_read)
  * Return: 0.
  */
 
-void validate_last_access(response *res, char *file, int *errors)
+void validate_last_access(response *r, char *file, int *err)
 {
-	if (access(res->hold, F_OK) != 0)
+	if (access(r->hold, F_OK) != 0)
 	{
-		printf("%s: %d: %s :not found\n", file, *errors, clean_spaces(res->hold));
-		*errors += 1;
+		fprintf(stderr, "%s: %d: %s :not found\n", file, *err, clean_spaces(r->hold));
+		*err += 1;
 	}
 	else
 	{
-		do_the_command(res);
+		do_the_command(r);
 	}
 }
 

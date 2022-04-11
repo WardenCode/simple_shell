@@ -12,7 +12,7 @@
  * Return: Return 1 if use a function, 0 otherwise.
  */
 
-int match_built_in(response *res, int *errors, char *argv)
+int match_built_in(response *r, int *err, char *av)
 {
 	int i = 0;
 	built options[] = {
@@ -28,9 +28,9 @@ int match_built_in(response *res, int *errors, char *argv)
 
 	while (options[i].key != NULL)
 	{
-		if (strcmp(res->toks[0], options[i].key) == 0)
+		if (strcmp(r->toks[0], options[i].key) == 0)
 		{
-			options[i].func(res, errors, argv);
+			options[i].func(r, err, av);
 			return (1);
 		}
 		i++;
@@ -50,17 +50,17 @@ int match_built_in(response *res, int *errors, char *argv)
  * Return: Return 1 if use a function, 0 otherwise.
  */
 
-int built_env(response *res, int *errors, char *argv)
+int built_env(response *r, int *err, char *av)
 {
 	int i = 0, number_tokens = 0;
 
-	UNUSED(errors), UNUSED(argv);
+	UNUSED(err), UNUSED(av);
 
-	number_tokens = number_of_tokens(res->toks);
+	number_tokens = number_of_tokens(r->toks);
 
 	if (number_tokens >= 2)
 	{
-		printf("env: '%s': No such file or directory\n", res->toks[1]);
+		fprintf(stderr, "env: '%s': No such file or directory\n", r->toks[1]);
 		return (1);
 	}
 
@@ -81,34 +81,34 @@ int built_env(response *res, int *errors, char *argv)
  * Return: Return 1 if use a function, 0 otherwise.
  */
 
-int built_exit(response *res, int *errors, char *argv)
+int built_exit(response *r, int *err, char *av)
 {
 	int number_tokens = 0, new_number = 0;
 
-	number_tokens = number_of_tokens(res->toks);
+	number_tokens = number_of_tokens(r->toks);
 
 	if (number_tokens == 1)
 	{
-		free_tokens(res->toks);
-		free(res->hold);
-		free(res);
+		free_tokens(r->toks);
+		free(r->hold);
+		free(r);
 		exit(2);
 	}
 
-	if (is_number(res->toks[1]))
+	if (is_number(r->toks[1]))
 	{
-		new_number = atoi(res->toks[1]);
+		new_number = atoi(r->toks[1]);
 	}
 	else
 	{
-		printf("%s: %d: exit: Illegal number: %s\n", argv, *errors, res->toks[1]);
-		*errors += 1;
+		fprintf(stderr, "%s: %d: exit: Illegal \number: %s\n", av, *err, r->toks[1]);
+		*err += 1;
 		return (1);
 	}
 
-	free_tokens(res->toks);
-	free(res->hold);
-	free(res);
+	free_tokens(r->toks);
+	free(r->hold);
+	free(r);
 	exit(new_number);
 }
 
@@ -124,14 +124,14 @@ int built_exit(response *res, int *errors, char *argv)
  * Return: Return 1 if use a function, 0 otherwise.
  */
 
-int built_setenv(response *res, int *errors, char *argv)
+int built_setenv(response *r, int *err, char *av)
 {
-	int num_tokens = number_of_tokens(res->toks);
+	int num_tokens = number_of_tokens(r->toks);
 
-	UNUSED(errors), UNUSED(argv);
+	UNUSED(err), UNUSED(av);
 
 	if (num_tokens == 3)
-		setenv(res->toks[1], res->toks[2], 1);
+		setenv(r->toks[1], r->toks[2], 1);
 	else if (num_tokens < 3)
 		fprintf(stderr, "To few arguments: Try use \"setenv [KEY] [VALUE]\"\n");
 	else
@@ -152,14 +152,14 @@ int built_setenv(response *res, int *errors, char *argv)
  * Return: Return 1 if use a function, 0 otherwise.
  */
 
-int built_unsetenv(response *res, int *errors, char *argv)
+int built_unsetenv(response *r, int *err, char *av)
 {
-	int num_tokens = number_of_tokens(res->toks);
+	int num_tokens = number_of_tokens(r->toks);
 
-	UNUSED(errors), UNUSED(argv);
+	UNUSED(err), UNUSED(av);
 
 	if (num_tokens == 2)
-		unsetenv(res->toks[1]);
+		unsetenv(r->toks[1]);
 	else
 		fprintf(stderr, "Wrong number of arguments: Try use \"unsetenv [KEY]\"\n");
 

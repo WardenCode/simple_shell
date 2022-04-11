@@ -12,14 +12,14 @@
  * Return: 1 if the route fails, 0 otherwise.
  */
 
-int fail_route(response *req, char *argv, int *err)
+int fail_route(response *r, char *av, int *err)
 {
-	if (access(req->toks[0], F_OK) != 0 && strchr(req->toks[0], '/'))
+	if (access(r->toks[0], F_OK) != 0 && strchr(r->toks[0], '/'))
 	{
-		printf("%s: %d: %s :not found\n", argv, *err, clean_spaces(req->toks[0]));
-		free_tokens(req->toks);
-		free(req->hold);
-		free(req);
+		printf("%s: %d: %s :not found\n", av, *err, clean_spaces(r->toks[0]));
+		free_tokens(r->toks);
+		free(r->hold);
+		free(r);
 		*err += 1;
 		return (1);
 	}

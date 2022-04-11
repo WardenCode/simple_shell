@@ -37,7 +37,7 @@ typedef struct response
 typedef struct built
 {
 	char *key;
-	int (*func)(response *res, int *errors, char *argv);
+	int (*func)(response *r, int *err, char *av);
 } built;
 
 extern char **environ;
@@ -52,7 +52,7 @@ int total_malloc(char *command);
 /* Shell Functions 2*/
 response *tokenize(char *input);
 int first_validations(char *command, int bytes_read);
-void validate_last_access(response *res, char *file, int *errors);
+void validate_last_access(response *r, char *file, int *err);
 int route_works(response *obj, int *while_status);
 void free_all(response *obj, int *while_status);
 
@@ -68,16 +68,16 @@ void display_path(void);
 char *str_concat(char *s1, char *s2);
 
 /*Built in Functions*/
-int match_built_in(response *res, int *errors, char *argv);
-int built_env(response *res, int *errors, char *argv);
-int built_exit(response *res, int *errors, char *argv);
-int built_cd(response *res, int *errors, char *argv);
-int built_help(response *res, int *errors, char *argv);
+int match_built_in(response *r, int *err, char *av);
+int built_env(response *r, int *err, char *av);
+int built_exit(response *r, int *err, char *av);
+int built_setenv(response *r, int *err, char *av);
+int built_unsetenv(response *r, int *err, char *av);
+int built_cd(response *r, int *err, char *av);
+int built_help(response *r, int *err, char *av);
 
 /*Future releases*/
-int built_alias(response *res, int *errors, char *argv);
-int built_setenv(response *res, int *errors, char *argv);
-int built_unsetenv(response *res, int *errors, char *argv);
+int built_alias(response *r, int *err, char *av);
 
 /*Built in Utils*/
 void c_handler(int x);

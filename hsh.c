@@ -27,8 +27,9 @@ int main(int argc __attribute__((unused)), char **argv)
 
 		bytes_read = getline(&command, &n, stdin);
 
-		if (first_validations(command, bytes_read))
-			continue;
+		if (first_validations(command, bytes_read) >= 1)
+			break;
+
 		req = tokenize(command);
 
 		if (match_built_in(req, &errors, argv[0]))
