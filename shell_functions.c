@@ -46,10 +46,12 @@ void free_tokens(char **tokens)
  *
  * @res: Pointer to a structur (tokens and holder).
  *
+ * @exit_status: Pointer to the exit status of the prev command.
+ *
  * Return: Void
  */
 
-void do_the_command(response *res)
+void do_the_command(response *res, int *exit_status)
 {
 	pid_t child_pid = 0;
 	int status_child = 0;
@@ -70,7 +72,10 @@ void do_the_command(response *res)
 	}
 	else
 	{
-		wait(&status_child);
+		waitpid(-1, &status_child, 0);
+
+		if (WEXITSTATUS(status_child))
+			*exit_status = WEXITSTATUS(status_child);
 	}
 }
 

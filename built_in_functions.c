@@ -3,16 +3,18 @@
 /**
  * match_built_in - Find if the built in to use.
  *
- * @res: Pointer to the structure (tokens, holder).
+ * @r: Pointer to the structure (tokens, holder).
  *
- * @errors: Pointer to the counter of errors.
+ * @err: Pointer to the counter of errors.
  *
- * @argv: Name of the executable.
+ * @av: Name of the executable.
+ *
+ * @exit_status: Pointer to the exit status of the prev command.
  *
  * Return: Return 1 if use a function, 0 otherwise.
  */
 
-int match_built_in(response *r, int *err, char *av)
+int match_built_in(response *r, int *err, char *av, int *exit_status)
 {
 	int i = 0;
 	built options[] = {
@@ -30,7 +32,7 @@ int match_built_in(response *r, int *err, char *av)
 	{
 		if (strcmp(r->toks[0], options[i].key) == 0)
 		{
-			options[i].func(r, err, av);
+			options[i].func(r, err, av, exit_status);
 			return (1);
 		}
 		i++;
@@ -41,20 +43,22 @@ int match_built_in(response *r, int *err, char *av)
 /**
  * built_env - Command of the simple shell to show the environment.
  *
- * @res: Pointer to the structure (tokens, holder).
+ * @r: Pointer to the structure (tokens, holder).
  *
- * @errors: Pointer to the counter of errors.
+ * @err: Pointer to the counter of errors.
  *
- * @argv: Name of the executable.
+ * @av: Name of the executable.
+ *
+ * @exit_status: Pointer to the exit status of the prev command.
  *
  * Return: Return 1 if use a function, 0 otherwise.
  */
 
-int built_env(response *r, int *err, char *av)
+int built_env(response *r, int *err, char *av, int *exit_status)
 {
 	int i = 0, number_tokens = 0;
 
-	UNUSED(err), UNUSED(av);
+	UNUSED(err), UNUSED(av), UNUSED(exit_status);
 
 	number_tokens = number_of_tokens(r->toks);
 
@@ -72,16 +76,18 @@ int built_env(response *r, int *err, char *av)
 /**
  * built_exit - Command of the simple shell to exit with status.
  *
- * @res: Pointer to the structure (tokens, holder).
+ * @r: Pointer to the structure (tokens, holder).
  *
- * @errors: Pointer to the counter of errors.
+ * @err: Pointer to the counter of errors.
  *
- * @argv: Name of the executable.
+ * @av: Name of the executable.
+ *
+ * @exit_status: Pointer to the exit status of the prev command.
  *
  * Return: Return 1 if use a function, 0 otherwise.
  */
 
-int built_exit(response *r, int *err, char *av)
+int built_exit(response *r, int *err, char *av, int *exit_status)
 {
 	int number_tokens = 0, new_number = 0;
 
@@ -92,7 +98,7 @@ int built_exit(response *r, int *err, char *av)
 		free_tokens(r->toks);
 		free(r->hold);
 		free(r);
-		exit(0);
+		exit(*exit_status);
 	}
 
 	if (is_number(r->toks[1]))
@@ -115,20 +121,22 @@ int built_exit(response *r, int *err, char *av)
 /**
  * built_setenv - Command to set or overwrite a env variable.
  *
- * @res: Pointer to the structure (tokens, holder).
+ * @r: Pointer to the structure (tokens, holder).
  *
- * @errors: Pointer to the counter of errors.
+ * @err: Pointer to the counter of errors.
  *
- * @argv: Name of the executable.
+ * @av: Name of the executable.
+ *
+ * @exit_status: Pointer to the exit status of the prev command.
  *
  * Return: Return 1 if use a function, 0 otherwise.
  */
 
-int built_setenv(response *r, int *err, char *av)
+int built_setenv(response *r, int *err, char *av, int *exit_status)
 {
 	int num_tokens = number_of_tokens(r->toks);
 
-	UNUSED(err), UNUSED(av);
+	UNUSED(err), UNUSED(av), UNUSED(exit_status);
 
 	if (num_tokens == 3)
 		setenv(r->toks[1], r->toks[2], 1);
@@ -143,20 +151,22 @@ int built_setenv(response *r, int *err, char *av)
 /**
  * built_unsetenv - Command of the simple shell eliminate a env var.
  *
- * @res: Pointer to the structure (tokens, holder).
+ * @r: Pointer to the structure (tokens, holder).
  *
- * @errors: Pointer to the counter of errors.
+ * @err: Pointer to the counter of errors.
  *
- * @argv: Name of the executable.
+ * @av: Name of the executable.
+ *
+ * @exit_status: Pointer to the exit status of the prev command.
  *
  * Return: Return 1 if use a function, 0 otherwise.
  */
 
-int built_unsetenv(response *r, int *err, char *av)
+int built_unsetenv(response *r, int *err, char *av, int *exit_status)
 {
 	int num_tokens = number_of_tokens(r->toks);
 
-	UNUSED(err), UNUSED(av);
+	UNUSED(err), UNUSED(av), UNUSED(exit_status);
 
 	if (num_tokens == 2)
 		unsetenv(r->toks[1]);

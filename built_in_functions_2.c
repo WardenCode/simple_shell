@@ -3,21 +3,24 @@
 /**
  * built_cd - Change directory.
  *
- * @res: Pointer to the structure (tokens, holder).
+ * @r: Pointer to the structure (tokens, holder).
  *
- * @errors: Pointer to the counter of errors.
+ * @err: Pointer to the counter of errors.
  *
- * @argv: Name of the executable.
+ * @av: Name of the executable.
+ *
+ * @exit_status: Pointer to the exit status of the prev command.
  *
  * Return: Return 1.
  */
 
-int built_cd(response *r, int *err, char *av)
+int built_cd(response *r, int *err, char *av, int *exit_status)
 {
 	int num_tokens = number_of_tokens(r->toks);
 	char WD[256], *owd = getenv("OLDPWD");
 
-	UNUSED(err), UNUSED(av);
+	UNUSED(err), UNUSED(av), UNUSED(exit_status);
+
 	getcwd(WD, sizeof(WD));
 
 	if (num_tokens <= 2)

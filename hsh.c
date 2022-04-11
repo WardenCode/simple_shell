@@ -13,7 +13,7 @@
 int main(int argc __attribute__((unused)), char **argv)
 {
 	size_t n = 0;
-	int bytes_read = 0, errors = 1, while_status = 1;
+	int bytes_read = 0, errors = 1, while_status = 1, exit_status = 0;
 	char *command = NULL;
 	response *req = NULL;
 
@@ -32,19 +32,19 @@ int main(int argc __attribute__((unused)), char **argv)
 
 		req = tokenize(command);
 
-		if (match_built_in(req, &errors, argv[0]))
+		if (match_built_in(req, &errors, argv[0], &exit_status))
 		{
 			free_all(req, &while_status);
 			continue;
 		}
 
-		if (route_works(req, &while_status))
+		if (route_works(req, &while_status, &exit_status))
 			continue;
 		if (fail_route(req, argv[0], &errors))
 			continue;
 
 		req->hold = which(req->hold);
-		validate_last_access(req, argv[0], &errors);
+		validate_last_access(req, argv[0], &errors, &exit_status);
 		free_all(req, &while_status);
 	}
 	return (0);

@@ -37,7 +37,7 @@ typedef struct response
 typedef struct built
 {
 	char *key;
-	int (*func)(response *r, int *err, char *av);
+	int (*func)(response *r, int *err, char *av, int *exit_status);
 } built;
 
 extern char **environ;
@@ -45,15 +45,15 @@ extern char **environ;
 /* Shell Functions */
 char *only_the_command(char *cmd);
 void free_tokens(char **tokens);
-void do_the_command(response *res);
+void do_the_command(response *res, int *exit_status);
 int all_spaces(char *command, ssize_t size);
 int total_malloc(char *command);
 
 /* Shell Functions 2*/
 response *tokenize(char *input);
 int first_validations(char *command, int bytes_read);
-void validate_last_access(response *r, char *file, int *err);
-int route_works(response *obj, int *while_status);
+void validate_last_access(response *r, char *file, int *err, int *exit_status);
+int route_works(response *obj, int *while_status, int *exit_status);
 void free_all(response *obj, int *while_status);
 
 /* Shell Functions 3*/
@@ -68,16 +68,16 @@ void display_path(void);
 char *str_concat(char *s1, char *s2);
 
 /*Built in Functions*/
-int match_built_in(response *r, int *err, char *av);
-int built_env(response *r, int *err, char *av);
-int built_exit(response *r, int *err, char *av);
-int built_setenv(response *r, int *err, char *av);
-int built_unsetenv(response *r, int *err, char *av);
-int built_cd(response *r, int *err, char *av);
-int built_help(response *r, int *err, char *av);
+int match_built_in(response *r, int *err, char *av, int *exit_status);
+int built_env(response *r, int *err, char *av, int *exit_status);
+int built_exit(response *r, int *err, char *av, int *exit_status);
+int built_setenv(response *r, int *err, char *av, int *exit_status);
+int built_unsetenv(response *r, int *err, char *av, int *exit_status);
+int built_cd(response *r, int *err, char *av, int *exit_status);
+int built_help(response *r, int *err, char *av, int *exit_status);
 
 /*Future releases*/
-int built_alias(response *r, int *err, char *av);
+int built_alias(response *r, int *err, char *av, int *exit_status);
 
 /*Built in Utils*/
 void c_handler(int x);

@@ -66,25 +66,28 @@ int first_validations(char *command, int bytes_read)
 /**
  * validate_last_access - Validate if the token[0] is a correct route or not
  *
- * @res: Pointer to an structure (tokens and holder).
+ * @r: Pointer to an structure (tokens and holder).
  *
  * @file: Pointer to the name of the executable.
  *
- * @errors: Pointer to the counter of errors ocurred on the shell.
+ * @err: Pointer to the counter of errors ocurred on the shell.
+ *
+ * @exit_status: Pointer to the exit status of the prev command.
  *
  * Return: 0.
  */
 
-void validate_last_access(response *r, char *file, int *err)
+void validate_last_access(response *r, char *file, int *err, int *exit_status)
 {
 	if (access(r->hold, F_OK) != 0)
 	{
-		fprintf(stderr, "%s: %d: %s :not found\n", file, *err, clean_spaces(r->hold));
+		fprintf(stderr, "%s: %d: %s :not found\n", file, *err,
+			clean_spaces(r->hold));
 		*err += 1;
 	}
 	else
 	{
-		do_the_command(r);
+		do_the_command(r, exit_status);
 	}
 }
 
@@ -95,14 +98,16 @@ void validate_last_access(response *r, char *file, int *err)
  *
  * @while_status: Status of the infinite while.
  *
+ * @exit_status: Pointer to the exit status of the prev command.
+ *
  * Return: 0 if the route fails, 1 otherwise.
  */
 
-int route_works(response *obj, int *while_status)
+int route_works(response *obj, int *while_status, int *exit_status)
 {
 	if (access(obj->toks[0], F_OK) == 0)
 	{
-		do_the_command(obj);
+		do_the_command(obj, exit_status);
 		free_all(obj, while_status);
 		*while_status = 1;
 		return (1);

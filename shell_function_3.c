@@ -3,9 +3,9 @@
 /**
  * fail_route - Validates if a route fails.
  *
- * @req: Pointer to a structure.
+ * @r: Pointer to a structure.
  *
- * @argv: Arguments vector.
+ * @av: Arguments vector.
  *
  * @err: Pointer to the counter of errors.
  *
