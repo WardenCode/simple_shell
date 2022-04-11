@@ -1,56 +1,6 @@
 #include "main.h"
 
 /**
- * all_spaces - Validate if the command of input is composed by spaces.
- *
- * @command: Command to go through
- *
- * @size: The size of the command (input)
- *
- * Return: Flag with the value of the search, 1 if only found spaces, \n and \t
- * 0 otherwise.
- */
-
-int all_spaces(char *command, ssize_t size)
-{
-	ssize_t i = 0, flag = 1;
-
-	while (command[i] == ' ' || command[i] == '\n' || command[i] == '\t'
-	       || command[i] == '/')
-		i++;
-
-	if (i != size)
-		flag = 0;
-
-	return (flag);
-}
-
-/**
- * total_malloc - Calculate the spaces and tabs to calculate
- * the malloc's quantity to use.
- *
- * @command: Command to analyze.
- *
- * Return: The malloc's quantity to use.
- */
-
-int total_malloc(char *command)
-{
-	int i = 0, counter = 0, flag = 0;
-
-	while (command[i] != '\0')
-	{
-		if (command[i] != ' ' && command[i] != '\t')
-			flag = 1;
-
-		if ((command[i] == ' ' || command[i] == '\t') && flag == 1)
-			counter++;
-		i++;
-	}
-	return (counter + 2);
-}
-
-/**
  * tokenize - Takes the input and tokenize command and arguments.
  *
  * @input: Input of the getline (with a command and parameters).
@@ -133,4 +83,44 @@ void validate_last_access(response *res, char *file, int *errors)
 	{
 		do_the_command(res);
 	}
+}
+
+/**
+ * route_works - Validate if a route works or not.
+ *
+ * @obj: Pointer to an structure (tokens, holder).
+ *
+ * @while_status: Status of the infinite while.
+ *
+ * Return: 0 if the route fails, 1 otherwise.
+ */
+
+int route_works(response *obj, int *while_status)
+{
+	if (access(obj->toks[0], F_OK) == 0)
+	{
+		do_the_command(obj);
+		free_all(obj, while_status);
+		*while_status = 1;
+		return (1);
+	}
+	return (0);
+}
+
+/**
+ * free_all - Function that free all the malloc of the program.
+ *
+ * @obj: Pointer to a structure (tokens and holder)
+ *
+ * @while_status: Status of the infinite while..
+ *
+ * Return: Void.
+ */
+
+void free_all(response *obj, int *while_status)
+{
+	free_tokens(obj->toks);
+	free(obj->hold);
+	free(obj);
+	*while_status = 1;
 }

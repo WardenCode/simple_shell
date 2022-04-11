@@ -1,59 +1,6 @@
 #include "main.h"
 
 /**
- * match_built_in - Find if the built in to use.
- *
- * @res: Pointer to the structure (tokens, holder).
- *
- * Return: Return 1 if use a function, 0 otherwise.
- */
-
-int match_built_in(response *res, int *errors, char *argv)
-{
-	int i = 0;
-	built options[] = {
-		{"env", built_env},
-		{"exit", built_exit},
-		/* {"unsetenv", built_unsetenv}, */
-		/* {"cd", built_cd}, */
-		/* {"help", built_help}, */
-		/* {"setenv", built_setenv}, */
-		/* {"alias", built_alias}, */
-		{NULL, NULL}
-	};
-
-	while (options[i].key != NULL)
-	{
-		if (strcmp(res->toks[0], options[i].key) == 0)
-		{
-			options[i].func(res, errors, argv);
-			return (1);
-		}
-		i++;
-	}
-	return (0);
-}
-
-void c_handler(int x)
-{
-	UNUSED(x);
-	write(1,"\n$ ", 3);
-}
-
-int validate_file(int argc, char *file)
-{
-	int exists = 0;
-
-	if (file == NULL)
-		return (exists);
-
-	if (argc == 2)
-		access(file, F_OK) == 0 ? exists = 1 : printf("error to see the file");
-
-	return (exists);
-}
-
-/**
  * main - Main function to run the simple shell.
  *
  * @argc: Arguments counter.

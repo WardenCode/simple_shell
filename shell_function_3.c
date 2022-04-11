@@ -1,46 +1,6 @@
 #include "main.h"
 
 /**
- * route_works - Validate if a route works or not.
- *
- * @obj: Pointer to an structure (tokens, holder).
- *
- * @while_status: Status of the infinite while.
- *
- * Return: 0 if the route fails, 1 otherwise.
- */
-
-int route_works(response *obj, int *while_status)
-{
-	if (access(obj->toks[0], F_OK) == 0)
-	{
-		do_the_command(obj);
-		free_all(obj, while_status);
-		*while_status = 1;
-		return (1);
-	}
-	return (0);
-}
-
-/**
- * free_all - Function that free all the malloc of the program.
- *
- * @obj: Pointer to a structure (tokens and holder)
- *
- * @while_status: Status of the infinite while..
- *
- * Return: Void.
- */
-
-void free_all(response *obj, int *while_status)
-{
-	free_tokens(obj->toks);
-	free(obj->hold);
-	free(obj);
-	*while_status = 1;
-}
-
-/**
  * fail_route - Validates if a route fails.
  *
  * @req: Pointer to a structure.
@@ -85,4 +45,51 @@ char *clean_spaces(char *command)
 		i++;
 	}
 	return (NULL);
+}
+
+/**
+ * which - Search the path of a command
+ *
+ * @command: Command to search.
+ *
+ * Return: The path if success, NULL if failure.
+ */
+
+char *which(char *command)
+{
+	char *path = NULL, *route = "\0", *full = NULL, *holder = NULL;
+	char *command_holder = NULL;
+
+	if (!command)
+		return (NULL);
+	path = str_concat(getenv("PATH"), ":");
+	holder = path;
+
+	command_holder = clean_spaces(command);
+
+	while (route != NULL)
+	{
+		route = strchr(holder, ':');
+		if (!route)
+			break;
+
+		route[0] = '\0';
+
+		full = validate_slash(command_holder, holder);
+
+		if (access(full, 0) == 0)
+		{
+			free(path);
+			free(command);
+			return (full);
+		}
+		else
+		{
+			holder = route + 1;
+			free(full);
+			continue;
+		}
+	}
+	free(path);
+	return (command);
 }

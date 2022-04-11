@@ -1,67 +1,6 @@
 #include "main.h"
 
 /**
- * find_char_rev - Search a char inside of a str beginning with the end.
- *
- * @str: String to search a char.
- *
- * @character: char to search in the str.
- *
- * Return: A pointer to the string after the char, if not find that char return
- * the str completed.
- */
-
-char *find_char_rev(char *str, char character)
-{
-	char *result = NULL;
-	ssize_t i = 0, j = 0, k = 0, counter = 0;
-
-	for (i = strlen(str); i >= 0; i--)
-	{
-		if (str[i] == character)
-			break;
-		counter++;
-	}
-
-	result = malloc((counter) * sizeof(char));
-	if (!result)
-		return (NULL);
-
-	for (j = 0, k = strlen(str) - counter + 1; j < counter; j++)
-		result[j] = str[k + j];
-
-	free(str);
-	return (result);
-}
-
-/**
- * no_new_line - Copy a pointer of the function getline and delete the '\n'.
- *
- * @command: Source command.
- *
- * @new_command: Pointer to the new command (without '\n').
- *
- * Return: Pointer to the command without new line.
- */
-
-char *no_new_line(char *command, char *new_command)
-{
-	int i = 0, size = 0;
-
-	size = strlen(command);
-	new_command = malloc(sizeof(char) * (size));
-	if (!new_command)
-	{
-		free(command);
-		return (NULL);
-	}
-	for (i = 0; i <= size - 1; i++)
-		new_command[i] = command[i];
-	new_command[i - 1] = '\0';
-	return (new_command);
-}
-
-/**
  * only_the_command - Take the command (with route) and oly takes the command.
  *
  * @cmd: Route of the command.
@@ -133,4 +72,54 @@ void do_the_command(response *res)
 	{
 		wait(&status_child);
 	}
+}
+
+/**
+ * all_spaces - Validate if the command of input is composed by spaces.
+ *
+ * @command: Command to go through
+ *
+ * @size: The size of the command (input)
+ *
+ * Return: Flag with the value of the search, 1 if only found spaces, \n and \t
+ * 0 otherwise.
+ */
+
+int all_spaces(char *command, ssize_t size)
+{
+	ssize_t i = 0, flag = 1;
+
+	while (command[i] == ' ' || command[i] == '\n' || command[i] == '\t'
+	       || command[i] == '/')
+		i++;
+
+	if (i != size)
+		flag = 0;
+
+	return (flag);
+}
+
+/**
+ * total_malloc - Calculate the spaces and tabs to calculate
+ * the malloc's quantity to use.
+ *
+ * @command: Command to analyze.
+ *
+ * Return: The malloc's quantity to use.
+ */
+
+int total_malloc(char *command)
+{
+	int i = 0, counter = 0, flag = 0;
+
+	while (command[i] != '\0')
+	{
+		if (command[i] != ' ' && command[i] != '\t')
+			flag = 1;
+
+		if ((command[i] == ' ' || command[i] == '\t') && flag == 1)
+			counter++;
+		i++;
+	}
+	return (counter + 2);
 }

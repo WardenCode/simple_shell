@@ -1,5 +1,27 @@
 #include "main.h"
 
+/**
+ * c_handler - Handle the Ctrl + C on the simple shell.
+ *
+ * @x: Unused int.
+ *
+ * Return: Void.
+ */
+
+void c_handler(int x)
+{
+	UNUSED(x);
+	write(1, "\n$ ", 3);
+}
+
+/**
+ * number_of_tokens - Calculate the num of tokens.
+ *
+ * @tokens: Double pointer to tokens.
+ *
+ * Return: Return the quantity of the tokens.
+ */
+
 int number_of_tokens(char **tokens)
 {
 	int number = 0;
@@ -9,6 +31,14 @@ int number_of_tokens(char **tokens)
 
 	return (number);
 }
+
+/**
+ * find_points - Find double points in a string.
+ *
+ * @key: The string to search inside.
+ *
+ * Return: A new string, all the caracters behind that double points.
+ */
 
 char *find_points(char *key)
 {
@@ -27,6 +57,14 @@ char *find_points(char *key)
 
 	return (result);
 }
+
+/**
+ * is_number - Validate if a string can be converted to a number.
+ *
+ * @str: String to valdidate.
+ *
+ * Return: Return 1 if the string contain only numbers, 0 otherwise.
+ */
 
 int is_number(char *str)
 {
