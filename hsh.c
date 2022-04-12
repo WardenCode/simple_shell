@@ -22,6 +22,7 @@ int main(int argc __attribute__((unused)), char **argv)
 	while (while_status)
 	{
 		while_status = isatty(STDIN_FILENO), n = 0;
+
 		if (while_status == 1)
 			write(1, "$ ", 2);
 
@@ -40,11 +41,14 @@ int main(int argc __attribute__((unused)), char **argv)
 
 		if (route_works(req, &while_status, &exit_status))
 			continue;
+
 		if (fail_route(req, argv[0], &errors))
 			continue;
 
 		req->hold = which(req->hold);
+
 		validate_last_access(req, argv[0], &errors, &exit_status);
+
 		free_all(req, &while_status);
 	}
 	return (0);
