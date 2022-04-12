@@ -57,7 +57,7 @@ int route_works(response *obj, int *while_status, int *exit_status);
 void free_all(response *obj, int *while_status);
 
 /* Shell Functions 3*/
-int fail_route(response *req, char *argv, int *err);
+int fail_route(response *r, char *av, int *err, int *exit_status);
 char *clean_spaces(char *command);
 char *which(char *command);
 

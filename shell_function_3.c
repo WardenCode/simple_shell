@@ -9,10 +9,12 @@
  *
  * @err: Pointer to the counter of errors.
  *
+ * @exit_status: Pointer to the exit status of the prev command.
+ *
  * Return: 1 if the route fails, 0 otherwise.
  */
 
-int fail_route(response *r, char *av, int *err)
+int fail_route(response *r, char *av, int *err, int *exit_status)
 {
 	if (access(r->toks[0], F_OK) != 0 && strchr(r->toks[0], '/'))
 	{
@@ -21,6 +23,7 @@ int fail_route(response *r, char *av, int *err)
 		free(r->hold);
 		free(r);
 		*err += 1;
+		*exit_status = 127;
 		return (1);
 	}
 	return (0);
@@ -62,6 +65,10 @@ char *which(char *command)
 
 	if (!command)
 		return (NULL);
+
+	if (!getenv("PATH"))
+		return (command);
+
 	path = str_concat(getenv("PATH"), ":");
 	holder = path;
 

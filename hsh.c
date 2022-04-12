@@ -43,7 +43,7 @@ int main(int argc __attribute__((unused)), char **argv)
 		}
 		if (route_works(req, &while_st, &exit_status))
 			continue;
-		if (fail_route(req, argv[0], &errors))
+		if (fail_route(req, argv[0], &errors, &exit_status))
 			continue;
 		req->hold = which(req->hold);
 		validate_last_access(req, argv[0], &errors, &exit_status);

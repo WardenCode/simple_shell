@@ -83,11 +83,22 @@ int first_validations(char *command, int bytes_read, int *while_st)
 
 void validate_last_access(response *r, char *file, int *err, int *exit_status)
 {
+	if (r->hold == NULL)
+	{
+		fprintf(stderr, "%s: %d: %s :not found\n", file, *err,
+			clean_spaces(r->toks[0]));
+		free_tokens(r->toks);
+		free(r);
+		*err += 1;
+		*exit_status = 127;
+	}
+
 	if (access(r->hold, F_OK) != 0)
 	{
 		fprintf(stderr, "%s: %d: %s :not found\n", file, *err,
 			clean_spaces(r->hold));
 		*err += 1;
+		*exit_status = 127;
 	}
 	else
 	{
