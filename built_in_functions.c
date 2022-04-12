@@ -91,6 +91,8 @@ int built_exit(response *r, int *err, char *av, int *exit_status)
 {
 	int number_tokens = 0, new_number = 0;
 
+	UNUSED(err), UNUSED(av);
+
 	number_tokens = number_of_tokens(r->toks);
 
 	if (number_tokens == 1)
@@ -105,12 +107,12 @@ int built_exit(response *r, int *err, char *av, int *exit_status)
 	{
 		new_number = atoi(r->toks[1]);
 	}
-	else
-	{
-		fprintf(stderr, "%s: %d: exit: Illegal number: %s\n", av, *err, r->toks[1]);
-		*err += 1;
-		return (1);
-	}
+	/* else */
+	/* { */
+	/* 	fprintf(stderr, "%s: %d: exit: Illegal number: %s\n", av, *err, r->toks[1]); */
+	/* 	*err += 1; */
+	/* 	return (1); */
+	/* } */
 
 	free_tokens(r->toks);
 	free(r->hold);
