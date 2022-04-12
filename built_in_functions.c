@@ -92,8 +92,6 @@ int built_exit(response *r, int *err, char *av, int *exit_status)
 {
 	int number_tokens = 0, new_number = 0;
 
-	UNUSED(err), UNUSED(av);
-
 	number_tokens = number_of_tokens(r->toks);
 
 	if (number_tokens == 1)
