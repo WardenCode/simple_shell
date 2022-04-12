@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stdlib.h>
 
 /**
  * match_built_in - Find if the built in to use.
@@ -111,6 +112,7 @@ int built_exit(response *r, int *err, char *av, int *exit_status)
 	{
 		fprintf(stderr, "%s: %d: exit: Illegal number: %s\n", av, *err, r->toks[1]);
 		*err += 1;
+		*exit_status = 2;
 		return (1);
 	}
 
