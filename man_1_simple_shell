@@ -1,10 +1,16 @@
-.TH hsh 8 "2022-04-11" "V1.0" "simple shell man page"
+.TH hsh 1 "2022-04-11" "V1.0" "simple shell man page"
 
 .SH NAME
 .B hsh simple shell
 
-.SH SYNOPSIS
+.SH SYNOPSIS (WAYS TO USE)
 .B hsh [filename]
+
+.B ./hsh
+
+.B echo "command" | ./hsh
+
+.B cat [bash_filename] | ./hsh
 
 .SH DESCRIPTION
 .B hsh is a simple UNIX command language interpreter that reads commands from either a file or standard input and executes them.
@@ -56,7 +62,7 @@ User hits `Ctrl+d` in the third line.
 **hsh** interprets the `$` character for variable replacement.
 .in
 
-.B Shellby Builtin Commands
+.B Shell Builtin Commands
 .in +2n
 
 .RS
@@ -74,6 +80,59 @@ Usage: exit [STATUS]
 .RS
 Usage: env
 .RE
+
+.B cd
+.RS
+Usage: cd [PATH DIR]
+.RE
+
+.B setenv
+.RS
+Usage: setenv [KEY] [VALUE]
+.RE
+
+.B unsetenv
+.RS
+Usage: unsetenv [KEY]
+.RE
+
+.SH EXAMPLE
+.nf
+
+./hsh
+$ echo Hello World
+Hello World
+
+$ pwd
+/root
+
+$ mkdir #CisFun
+
+$ /bin/ls
+
+#CisFun
+
+$ exit 24
+
+.ni
+
+.SH FUTURE FEATURES
+
+.B ";" Handle separator of commands.
+
+.B "&& and ||" Handle the logical operators.
+
+.B "alias" Allows use aliases.
+
+.B "$$ $?" Variables replacement.
+
+.B "#" Allow the comments.
+
+.B "help" Display the help for the built-ins.
+
+.B "history" Displays the history list.
+
+.B "simple_shell [filename]" Can take a file as a command line argument.
 
 .SH SEE ALSO
 access(2), chdir(2), execve(2), _exit(2), exit(3), fflush(3), fork(2), free(3), isatty(3), getcwd(3), malloc(3), open(2), read(2), sh(1), signal(2), stat(2), wait(2), write(2)
