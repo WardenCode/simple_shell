@@ -49,5 +49,5 @@ int main(int argc __attribute__((unused)), char **argv)
 		validate_last_access(req, argv[0], &errors, &exit_status);
 		free_all(req, &while_st);
 	}
-	return (0);
+	return (exit_status);
 }
