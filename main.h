@@ -51,7 +51,7 @@ int total_malloc(char *command);
 
 /* Shell Functions 2*/
 response *tokenize(char *input);
-int first_validations(char *command, int bytes_read);
+int first_validations(char *command, int bytes_read, int *while_st);
 void validate_last_access(response *r, char *file, int *err, int *exit_status);
 int route_works(response *obj, int *while_status, int *exit_status);
 void free_all(response *obj, int *while_status);

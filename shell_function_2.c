@@ -44,22 +44,26 @@ response *tokenize(char *input)
  *
  * @bytes_read: Lenght of the command.
  *
+ * @while_st: Pointer to the while status.
+ *
  * Return: 0 if all good, 1 otherwise.
  */
 
-int first_validations(char *command, int bytes_read)
+int first_validations(char *command, int bytes_read, int *while_st)
 {
-	if (bytes_read == -1)
+	if (bytes_read == EOF)
 	{
 		free(command);
-		return (2);
+		return (-1);
 	}
 
 	if (all_spaces(command, bytes_read))
 	{
+		*while_st = 1;
 		free(command);
 		return (1);
 	}
+
 	return (0);
 }
 

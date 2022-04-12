@@ -13,43 +13,41 @@
 int main(int argc __attribute__((unused)), char **argv)
 {
 	size_t n = 0;
-	int bytes_read = 0, errors = 1, while_status = 1, exit_status = 0;
-	char *command = NULL;
+	int bytes_read = 0, errors = 1, while_st = 1, exit_status = 0;
+	int validate = 0;
+	char *command = NULL, *no_line = NULL;
 	response *req = NULL;
 
 	signal(SIGINT, c_handler);
 
-	while (while_status)
+	while (while_st)
 	{
-		while_status = isatty(STDIN_FILENO), n = 0;
-
-		if (while_status == 1)
+		while_st = isatty(STDIN_FILENO), n = 0;
+		if (while_st == 1)
 			write(1, "$ ", 2);
-
 		bytes_read = getline(&command, &n, stdin);
 
-		if (first_validations(command, bytes_read) >= 1)
+		validate = first_validations(command, bytes_read, &while_st);
+		if (validate == -1)
 			break;
+		else if (validate == 1)
+			continue;
 
-		req = tokenize(command);
+		no_line = strndup(command, bytes_read - 1), free(command);
+		req = tokenize(no_line);
 
 		if (match_built_in(req, &errors, argv[0], &exit_status))
 		{
-			free_all(req, &while_status);
+			free_all(req, &while_st);
 			continue;
 		}
-
-		if (route_works(req, &while_status, &exit_status))
+		if (route_works(req, &while_st, &exit_status))
 			continue;
-
 		if (fail_route(req, argv[0], &errors))
 			continue;
-
 		req->hold = which(req->hold);
-
 		validate_last_access(req, argv[0], &errors, &exit_status);
-
-		free_all(req, &while_status);
+		free_all(req, &while_st);
 	}
 	return (0);
 }
