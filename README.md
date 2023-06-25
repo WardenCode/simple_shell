@@ -9,6 +9,15 @@ A simple UNIX command interpreter written as part of the low-level programming a
 
 hsh is a simple UNIX command language interpreter that reads commands from either a file or standard input and executes them.
 
+## Table of Content
+* [Available commands](#available-commands)
+* [Installation](#installation)
+* [Code Style](#code-style)
+* [Environment](#environment)
+* [Examples](#examples)
+* [Authors](#authors)
+* [License](#license)
+
 
 ## Available commands
 
@@ -115,7 +124,7 @@ $ echo "echo $PATH" | ./hsh
 /home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/vagrant/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 ```
 
-## Usage/Examples
+## Examples
 
 ### Exit Status
 
